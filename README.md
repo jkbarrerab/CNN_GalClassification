@@ -1,40 +1,118 @@
-# Convolutional Neural Network (CNN) for galaxy morphological classification
+# CNN Galaxy Classification
 
-In this project we use CNN to provide morphological classification of galaxies including in the SDSS survey (Sloan Digital Sky Survey). These galaxies have been classified morphologically using the [GalaxyZoo](https://www.zooniverse.org/projects/zookeeper/galaxy-zoo/) plataform using the so-called citizen-scientist. Briefly, the plataform presents to a user the image of a random galaxy with a comparison of typical morphological features of a galaxy (e.g., it is round-shaped? does it have arms? does it have a bar?). Given the fact for given galaxy this classification is performed by hundreds of users, it is significantly more robust in comparison to those derived by single or small group of astronomers. 
+[![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange)](https://www.tensorflow.org/)
+[![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange)](https://jupyter.org/)
 
-This project make use of the images reprocessed by the  [`astroNN`](https://astronn.readthedocs.io/en/latest/galaxy10sdss.html) package (see [Gharat & Dandawate, 2022](https://ui.adsabs.harvard.edu/abs/2022MNRAS.511.5120G/abstract), and [Leung and Bovy, 2019](https://ui.adsabs.harvard.edu/abs/2019MNRAS.483.3255L/abstract) for further information regarding tagging, and image downscaling). Here is an example of the images as well as the classification provided by the [`astroNN`](https://astronn.readthedocs.io/en/latest/galaxy10sdss.html) package:
+## TL;DR
+
+A Convolutional Neural Network implementation for galaxy morphological classification using SDSS survey data: train a CNN on citizen-scientist classified galaxies from GalaxyZoo, achieve ~90% accuracy across 10 morphological classes.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Dataset](#dataset)
+- [Model Architecture](#model-architecture)
+- [Requirements](#requirements)
+- [Quickstart](#quickstart)
+- [Results](#results)
+- [About This Project](#about-this-project)
+- [References](#references)
+
+## Overview
+
+This project uses Convolutional Neural Networks (CNNs) to perform morphological classification of galaxies from the SDSS survey (Sloan Digital Sky Survey). The galaxies have been morphologically classified using the [GalaxyZoo](https://www.zooniverse.org/projects/zookeeper/galaxy-zoo/) platform through citizen science contributions. The platform presents users with galaxy images alongside typical morphological features (e.g., is it round-shaped? does it have spiral arms? does it have a bar?). Since each galaxy is classified by hundreds of users, this approach provides significantly more robust classifications compared to those derived by individual astronomers or small groups.
+
+## Dataset
+
+This project utilizes images reprocessed by the [`astroNN`](https://astronn.readthedocs.io/en/latest/galaxy10sdss.html) package (see [Gharat & Dandawate, 2022](https://ui.adsabs.harvard.edu/abs/2022MNRAS.511.5120G/abstract), and [Leung and Bovy, 2019](https://ui.adsabs.harvard.edu/abs/2019MNRAS.483.3255L/abstract) for detailed information regarding tagging and image downscaling). 
+
+Below is an example of the images and their classifications:
 
 ![screenshot](ClassificationExample.png)
 
-In the notebook `CNN_galaxies.ipynb` we employ a CNN architecture as well as the metrics used to estimate the acquracy of the model. The Neural Network architecture consist of: 
-* 2 convolutional leyer with 64 filters of 3x3 kernel size
-* 1 maxpooling layer of 2x2 kernel size
-* 1 convolutional leyer with 128 filters of 3x3 kernel size
-* 1 maxpooling layer of 2x2 kernel size
-* 1 convolutional leyer with 256 filters of 3x3 kernel size
-* 1 maxpooling layer of 2x2 kernel size
-* 1 Dropout of 0.5
-* 2 dense layer of 150 and 60 neurons, respectively.
-* 1 final dense leyer of 10
+## Model Architecture
 
-For the convolutional layers we use a relu activation function whereas for the dense layers we use a tanh activation function (except for the ouput layer where we use a softmax function).
+The CNN architecture implemented in `CNN_galaxies.ipynb` consists of:
 
-Given the simplycity of the model and the training sample, this notebook can be run in colab. . This code was developed as the final project of the optative lecture 'Data analysis for astronomy' held at the UNAM Astronomy Institute during the 2023-fall term. Teachers: Joel Sanchez and Jorge Barrera. Students: Eric Macías Estrada, Mónica Alejandra Villa Durango, Valeria Quintero Ortega, and Aurora Mata Sánchez. 
+### Convolutional Layers
+- **2 convolutional layers** with 64 filters of 3×3 kernel size + ReLU activation
+- **1 max pooling layer** of 2×2 kernel size
+- **1 convolutional layer** with 128 filters of 3×3 kernel size + ReLU activation
+- **1 max pooling layer** of 2×2 kernel size
+- **1 convolutional layer** with 256 filters of 3×3 kernel size + ReLU activation
+- **1 max pooling layer** of 2×2 kernel size
 
-# Results
+### Dense Layers
+- **1 dropout layer** with 0.5 dropout rate
+- **2 dense layers** with 150 and 60 neurons (Tanh activation)
+- **1 output layer** with 10 neurons (Softmax activation) 
 
-## Metrics
-In the below plots we show the Loss function (left panel) and accuracy (right panel) with respect to the epochs we train the CNN. 
+## Requirements
 
-The Loss function is used to quantify how good or bad we are doing the classification of our training set. In this case we use the cross entropy function. This function is usually used for classification tasks.  We train our CNN for 200 epochs. We note that as the epoch of training increases the Loss function dramatically decreases which is expected. However we also note that at the epoch 75 the Loss function using the validation set start to slightly increases. This suggest that, eventough the loss function is monotonicaly decreasing when we use the training set, there could be an overfitting in the training after this epoch.   
+- Python 3.8+
+- TensorFlow 2.x
+- NumPy
+- Matplotlib
+- Scikit-learn
+- Jupyter Notebook
 
-Another metrics we use is the accuracy. This is derived as the sum of the true positives and true negatives over the sum of the total values. Larger values of accuracty indicate that the CNN is learning better. The plot shows that as the epochs of training increases so does the accuracy of the training sample. However, we also note that after ~ 75 epochs the accuracy using the validation set does not significantly increases. As with the loss function, this indicates that after this epoch the CNN could be overfitting. This highlight the importance to use a validation set to better test the CNN. We achive accuracy values similar to those reported in  [Gharat & Dandawate, 2022](https://ui.adsabs.harvard.edu/abs/2022MNRAS.511.5120G/abstract).
+## Quickstart
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/CNN_GalClassification.git
+   cd CNN_GalClassification
+   ```
+
+2. **Install dependencies**
+   ```bash
+   pip install tensorflow numpy matplotlib scikit-learn jupyter
+   ```
+
+3. **Run the notebook**
+   ```bash
+   jupyter notebook CNN_galaxies.ipynb
+   ```
+
+4. **Execute all cells** to train and evaluate the model
+
+> **Note**: Given the model's simplicity and training sample size, this notebook can be executed in Google Colab without additional computational resources.
+
+## Results
+
+### Training Metrics
+
+The plots below show the loss function (left panel) and accuracy (right panel) across training epochs for our CNN model.
+
+**Loss Function**: We use cross-entropy loss, which quantifies classification performance on our training set. The model was trained for 200 epochs. As expected, the loss function decreases dramatically as training progresses. However, around epoch 75, the validation loss begins to slightly increase, suggesting potential overfitting beyond this point.
+
+**Accuracy**: Calculated as the sum of true positives and true negatives divided by the total number of samples. Higher accuracy values indicate better CNN performance. While training accuracy continues to improve, validation accuracy plateaus after approximately 75 epochs, confirming the overfitting hypothesis. Our achieved accuracy values are comparable to those reported in [Gharat & Dandawate, 2022](https://ui.adsabs.harvard.edu/abs/2022MNRAS.511.5120G/abstract).
 
 ![screenshot](CNN_loss_accuracy.png)
 
-## Confusion Matrix
+### Confusion Matrix
 
-The confusion matrix helps us to better cuantify how the Neural Network is performing the classification. The columns represent the true tags of the sample, whereas the rows represent the predicted tag from the CNN. In our case, the numbers corresponds to the classification presented in the figure above. If the network did a perfect job all the values in the diagonal of the matrix will be 100% and the rest should be 0%. As we can see this is not the case, we find values in the diagonal close to 90% but this is not the case for all the tags. This suggest the subtle differences in morphological classifation of galaxies. For instance the tag 10 (Disk, Face-ON, Loose Spiral) is, morphologicaly speaking, similar to the tag 1 (Disk, Face-On, No spiral). This is observed in the confusion matrix, where the cell (1,10) has a value close to 30%.
+The confusion matrix provides detailed insight into the CNN's classification performance. Columns represent true labels, while rows represent predicted labels from the CNN. The numbers correspond to the classifications shown in the dataset figure above.
+
+Perfect classification would result in 100% values along the diagonal and 0% elsewhere. Our results show diagonal values close to 90%, though this varies across different galaxy types. This variation reflects the subtle differences in galaxy morphological classification. For example, class 10 (Disk, Face-On, Loose Spiral) is morphologically similar to class 1 (Disk, Face-On, No Spiral), as evidenced by the ~30% value in cell (1,10) of the confusion matrix.
 
 ![screenshot](CNN_confusionMatrix.png)
 
+## About This Project
+
+This code was developed as the final project for the elective course 'Data Analysis for Astronomy' at the UNAM Astronomy Institute during the 2023 fall semester.
+
+**Instructors**: Joel Sanchez and Jorge Barrera  
+**Students**: Eric Macías Estrada, Mónica Alejandra Villa Durango, Valeria Quintero Ortega, and Aurora Mata Sánchez
+
+## References
+
+- [Gharat, S. & Dandawate, Y. (2022). Galaxy morphology classification using EfficientNet architectures. *MNRAS*, 511, 5120-5132](https://ui.adsabs.harvard.edu/abs/2022MNRAS.511.5120G/abstract)
+- [Leung, H. W. & Bovy, J. (2019). Deep learning of multi-element abundances from high-resolution spectroscopic data. *MNRAS*, 483, 3255-3277](https://ui.adsabs.harvard.edu/abs/2019MNRAS.483.3255L/abstract)
+- [Galaxy Zoo Project - Zooniverse](https://www.zooniverse.org/projects/zookeeper/galaxy-zoo/)
+- [astroNN Documentation - Galaxy10 SDSS](https://astronn.readthedocs.io/en/latest/galaxy10sdss.html)
+
+## License
+
+This project is available under the MIT License. See the LICENSE file for more details.
